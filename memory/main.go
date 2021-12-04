@@ -17,18 +17,13 @@ type user struct {
 	Name  string
 }
 
-func readHandler(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 5000; i++ {
-		go read()
-	}
-
-	if _, err := fmt.Fprintf(w, "Done!"); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func main() {
-	http.HandleFunc("/read/", readHandler)
+	go func() {
+		for i := 0; i < 5000; i++ {
+			go read()
+		}
+	}()
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -52,12 +47,8 @@ func read() {
 			Name:  row[2],
 			Email: row[1],
 		}
-		save(user)
+		fmt.Println(user)
 	}
-}
-
-func save(u user) {
-	// It is fake)
 }
 
 func read2() {
@@ -80,6 +71,6 @@ func read2() {
 			Name:  record[2],
 			Email: record[1],
 		}
-		save(user)
+		fmt.Println(user)
 	}
 }

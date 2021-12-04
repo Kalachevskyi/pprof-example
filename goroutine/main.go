@@ -5,19 +5,20 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"time"
 )
 
-// function to add an array of numbers.
 func sum(s []int) {
 	sum := 0
 	for _, v := range s {
 		sum += v
 	}
+
+	time.Sleep(time.Second * 3)
 	fmt.Println(sum)
 }
 
 func main() {
-	//runtime.SetBlockProfileRate(1)
 	go foo()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

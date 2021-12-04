@@ -28,7 +28,6 @@ func main() {
 	}
 	if err := pprof.StartCPUProfile(f); err != nil {
 		log.Fatal(err)
-
 	}
 	defer pprof.StopCPUProfile()
 
@@ -69,7 +68,11 @@ func merge(users []User, companies []Company) []User {
 }
 
 func merge2(users []User, companies []Company) []User {
-	companiesByUser := convertByUser(companies)
+	companiesByUser := make(map[int]Company, len(companies))
+	for _, company := range companies {
+		companiesByUser[company.UserID] = company
+	}
+
 	for userKey, user := range users {
 		company, ok := companiesByUser[user.ID]
 		if !ok {
@@ -79,12 +82,4 @@ func merge2(users []User, companies []Company) []User {
 	}
 
 	return users
-}
-
-func convertByUser(companies []Company) map[int]Company {
-	companiesByUser := make(map[int]Company, len(companies))
-	for _, company := range companies {
-		companiesByUser[company.UserID] = company
-	}
-	return companiesByUser
 }
